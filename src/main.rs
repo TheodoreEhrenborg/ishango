@@ -3,29 +3,36 @@ use directories::ProjectDirs;
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 use std::fs::{self, File, OpenOptions};
+use clap::Parser;
 use std::io::{BufRead, BufReader, Write};
 use std::path::{Path, PathBuf};
 use structopt::StructOpt;
 
-#[derive(StructOpt)]
-#[structopt(name = "ishango")]
+#[derive(Parser)]
+#[command(name = "ishango")]
 enum Opt {
-    #[structopt(name = "init")]
-    Init { bucket: String },
+    #[command(name = "init")]
+    Init {
+        bucket: String,
+    },
 
-    #[structopt(name = "add")]
+    #[command(name = "add",allow_hyphen_values=true)]
     Add {
         bucket: String,
         value: f64,
     },
 
-    #[structopt(name = "balance")]
-    Balance { bucket: String },
+    #[command(name = "balance")]
+    Balance {
+        bucket: String,
+    },
 
-    #[structopt(name = "transactions")]
-    Transactions { bucket: String },
+    #[command(name = "transactions")]
+    Transactions {
+        bucket: String,
+    },
 
-    #[structopt(name = "list")]
+    #[command(name = "list")]
     List,
 }
 
@@ -150,7 +157,7 @@ fn list() -> Result<(), String> {
 }
 
 fn main() {
-    let opt = Opt::from_args();
+    let opt = Opt::parse();
     let result = match opt {
         Opt::Init { bucket } => init(&bucket),
         Opt::Add { bucket, value } => add(&bucket, value),
