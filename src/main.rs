@@ -98,7 +98,7 @@ fn balance(bucket: &str) -> Result<(), String> {
 
     let sum: f64 = reader
         .lines()
-        .filter_map(|line| line.ok())
+        .map_while(Result::ok)
         .filter_map(|line| serde_json::from_str::<Transaction>(&line).ok())
         .map(|transaction| transaction.value)
         .sum();
