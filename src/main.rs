@@ -1,9 +1,9 @@
 use chrono::{DateTime, Local, TimeZone, Utc};
+use clap::Parser;
 use directories::ProjectDirs;
 use regex::Regex;
 use serde::{Deserialize, Serialize};
 use std::fs::{self, File, OpenOptions};
-use clap::Parser;
 use std::io::{BufRead, BufReader, Write};
 use std::path::{Path, PathBuf};
 use structopt::StructOpt;
@@ -12,25 +12,16 @@ use structopt::StructOpt;
 #[command(name = "ishango")]
 enum Opt {
     #[command(name = "init")]
-    Init {
-        bucket: String,
-    },
+    Init { bucket: String },
 
-    #[command(name = "add",allow_hyphen_values=true)]
-    Add {
-        bucket: String,
-        value: f64,
-    },
+    #[command(name = "add", allow_hyphen_values = true)]
+    Add { bucket: String, value: f64 },
 
     #[command(name = "balance")]
-    Balance {
-        bucket: String,
-    },
+    Balance { bucket: String },
 
     #[command(name = "transactions")]
-    Transactions {
-        bucket: String,
-    },
+    Transactions { bucket: String },
 
     #[command(name = "list")]
     List,
@@ -125,15 +116,18 @@ fn transactions(bucket: &str) -> Result<(), String> {
 
     for line in reader.lines() {
         let line = line.map_err(|e| e.to_string())?;
-        let transaction: Transaction =
-            serde_json::from_str(&line).map_err(|e| e.to_string())?;
+        let transaction: Transaction = serde_json::from_str(&line).map_err(|e| e.to_string())?;
 
         let datetime: DateTime<Local> = DateTime::from(
             Utc.timestamp_opt(transaction.time, 0)
                 .single()
-                .ok_or("Invalid timestamp")?
+                .ok_or("Invalid timestamp")?,
         );
-        println!("{} {:.2}", datetime.format("%Y-%m-%d %H:%M:%S"), transaction.value);
+        println!(
+            "{} {:.2}",
+            datetime.format("%Y-%m-%d %H:%M:%S"),
+            transaction.value
+        );
     }
     Ok(())
 }
