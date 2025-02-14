@@ -5,8 +5,7 @@ use regex::Regex;
 use serde::{Deserialize, Serialize};
 use std::fs::{self, File, OpenOptions};
 use std::io::{BufRead, BufReader, Write};
-use std::path::{Path, PathBuf};
-use structopt::StructOpt;
+use std::path::PathBuf;
 
 #[derive(Parser)]
 #[command(name = "ishango")]
