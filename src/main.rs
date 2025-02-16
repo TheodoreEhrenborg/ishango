@@ -24,6 +24,9 @@ enum Opt {
 
     #[command(name = "list")]
     List,
+
+    #[command(name = "where")]
+    Where,
 }
 
 #[derive(Serialize, Deserialize)]
@@ -149,6 +152,11 @@ fn list() -> Result<(), String> {
     Ok(())
 }
 
+fn where_cmd() -> Result<(), String> {
+    println!("{}", get_data_dir().display());
+    Ok(())
+}
+
 fn main() {
     let opt = Opt::parse();
     let result = match opt {
@@ -157,6 +165,7 @@ fn main() {
         Opt::Balance { bucket } => balance(&bucket),
         Opt::Transactions { bucket } => transactions(&bucket),
         Opt::List => list(),
+        Opt::Where => where_cmd(),
     };
 
     if let Err(e) = result {
