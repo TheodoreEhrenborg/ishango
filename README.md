@@ -1,86 +1,62 @@
 # Ishango
 
-A simple command-line tool for tracking numerical values in different buckets.
+A lightweight command-line tool that tracks numerical values in different buckets.
 
 ## Installation
 
-Requires Rust and Cargo. Build from source:
+```bash
+cargo install ishango
+```
+
+(And you can get cargo from https://www.rust-lang.org/tools/install)
+
+## Usage
+
+Say you want to track overtime. Create an overtime bucket:
 
 ```bash
-git clone <repository-url>
-cd ishango
-cargo build --release
+ishango init overtime
+```
 
-The binary will be available at target/release/ishango
-Usage
-Initialize a bucket
+Then you're 10 minutes late to work, but you work 20.5 minutes extra at lunch:
 
-bash
+```bash
+ishango add overtime -10
+ishango add overtime 20.5
+```
 
-ishango init <bucket-name>
+Then you can check the balance:
 
-Creates a new bucket. Bucket names can only contain letters, numbers, hyphens, and underscores.
+```bash
+ishango balance overtime
+```
 
-Example:
+If you're not sure if you remembered to record being late to work,
+you can look back to see if you did:
 
-bash
+```bash
+ishango transactions overtime
+```
 
-ishango init my-savings
+### Less useful commands
 
-Add a transaction
+`ishango list` lists all existing buckets.
 
-bash
+`ishango where` shows where the bucket data is stored.
+It's in [JSONL](https://jsonlines.org/) format,
+so you can edit it by hand if you need.
 
-ishango add <bucket-name> <value>
+## Alternatives
 
-Adds a value to the specified bucket. Values can be positive or negative decimals.
+For use-cases like money,
+it's important to have good records and
+be able to query them in various ways ("How much did I spend on food last January?").
+I recommend [beancount](https://github.com/beancount/beancount)
+(and its GUI [fava](https://beancount.github.io/fava/)).
+This gives you the extra benefit of double-entry accounting,
+at the cost of taking a tad more time
+to record a transaction.
 
-Examples:
-
-bash
-
-ishango add my-savings 100.50
-ishango add my-savings -25.75
-
-Check balance
-
-bash
-
-ishango balance <bucket-name>
-
-Shows the sum of all transactions in the bucket.
-
-Example:
-
-bash
-
-ishango balance my-savings
-
-View transactions
-
-bash
-
-ishango transactions <bucket-name>
-
-Lists all transactions with their timestamps.
-
-Example:
-
-bash
-
-ishango transactions my-savings
-
-List buckets
-
-bash
-
-ishango list
-
-Shows all existing buckets.
-Data Storage
-
-All data is stored in JSONL files in your local data directory:
-
-    Linux: ~/.local/share/ishango/
-    macOS: ~/Library/Application Support/ishango/
-    Windows: %APPDATA%\ishango\
+If you need to clock in and out of a project,
+I recommend Emacs's
+[task clocking](https://orgmode.org/manual/Clocking-commands.html).
