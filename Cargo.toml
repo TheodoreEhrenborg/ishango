@@ -2,6 +2,10 @@
 name = "ishango"
 version = "0.1.0"
 edition = "2021"
+license = "MIT"
+description = "Track numerical values in different buckets"
+repository = "https://github.com/TheodoreEhrenborg/ishango"
+readme = "README.md"
 
 [dependencies]
 chrono = "0.4.39"
