@@ -36,6 +36,4 @@ jobs:
         with:
           bin: ishango
           target: ${{ matrix.target }}
-          tar: all
-          zip: all
           token: ${{ secrets.GITHUB_TOKEN }}
