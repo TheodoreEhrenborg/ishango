@@ -1,4 +1,5 @@
-use chrono::{DateTime, Local, TimeZone, Utc};
+use chrono::{DateTime, Local, NaiveDate, TimeZone, Utc};
+use std::collections::BTreeMap;
 use clap::Parser;
 use directories::ProjectDirs;
 use regex::Regex;
@@ -27,6 +28,9 @@ enum Opt {
 
     #[command(name = "where")]
     Where,
+
+    #[command(name = "delta")]
+    Delta { bucket: String },
 }
 
 #[derive(Serialize, Deserialize)]
@@ -157,6 +161,35 @@ fn where_cmd() -> Result<(), String> {
     Ok(())
 }
 
+fn delta(bucket: &str) -> Result<(), String> {
+    ensure_bucket_exists(bucket)?;
+
+    let file = File::open(get_bucket_path(bucket)).map_err(|e| e.to_string())?;
+    let reader = BufReader::new(file);
+
+    let mut daily_sums: BTreeMap<NaiveDate, f64> = BTreeMap::new();
+
+    for line in reader.lines() {
+        let line = line.map_err(|e| e.to_string())?;
+        let transaction: Transaction = serde_json::from_str(&line).map_err(|e| e.to_string())?;
+
+        let datetime: DateTime<Local> = DateTime::from(
+            Utc.timestamp_opt(transaction.time, 0)
+                .single()
+                .ok_or("Invalid timestamp")?,
+        );
+        
+        let date = datetime.date_naive();
+        *daily_sums.entry(date).or_insert(0.0) += transaction.value;
+    }
+
+    for (date, sum) in daily_sums {
+        println!("{}: {:.2}", date.format("%Y-%m-%d"), sum);
+    }
+
+    Ok(())
+}
+
 fn main() {
     let opt = Opt::parse();
     let result = match opt {
@@ -166,6 +199,7 @@ fn main() {
         Opt::Transactions { bucket } => transactions(&bucket),
         Opt::List => list(),
         Opt::Where => where_cmd(),
+        Opt::Delta { bucket } => delta(&bucket),
     };
 
     if let Err(e) = result {
