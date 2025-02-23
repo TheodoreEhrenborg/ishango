@@ -4,6 +4,16 @@ A lightweight command-line tool that tracks numerical values in different bucket
 
 ## Installation
 
+### From binary
+
+1. Go to https://github.com/TheodoreEhrenborg/ishango/releases
+1. Download the right binary for your computer from the latest release's assets.
+1. Decompress it: `cd ~/Downloads && tar -xzf ishango-x86_64-unknown-linux-gnu.tar.gz`
+1. Make it executable: `chmod +x ishango`
+1. Add it to your path: `sudo mv ishango /usr/local/bin/`
+
+### With cargo
+
 ```bash
 cargo install ishango
 ```
