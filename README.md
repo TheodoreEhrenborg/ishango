@@ -70,3 +70,6 @@ to record a transaction.
 If you need to clock in and out of a project,
 I recommend Emacs's
 [task clocking](https://orgmode.org/manual/Clocking-commands.html).
+
+## Note on concurrency
+It's not safe to have multiple instances editing the jsonl file at once
