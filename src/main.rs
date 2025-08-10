@@ -11,25 +11,25 @@ use std::path::PathBuf;
 #[derive(Parser)]
 #[command(name = "ishango")]
 enum Opt {
-    #[command(name = "init")]
+    #[command(name = "init", alias = "i")]
     Init { bucket: String },
 
-    #[command(name = "add", allow_hyphen_values = true)]
+    #[command(name = "add", alias = "a", allow_hyphen_values = true)]
     Add { bucket: String, value: f64 },
 
-    #[command(name = "balance")]
+    #[command(name = "balance", alias = "b")]
     Balance { bucket: String },
 
-    #[command(name = "transactions")]
+    #[command(name = "transactions", alias = "t")]
     Transactions { bucket: String },
 
-    #[command(name = "list")]
+    #[command(name = "list", alias = "l")]
     List,
 
-    #[command(name = "where")]
+    #[command(name = "where", alias = "w")]
     Where,
 
-    #[command(name = "delta")]
+    #[command(name = "delta", alias = "d")]
     Delta { bucket: String },
 }
 
